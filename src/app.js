@@ -7,6 +7,17 @@ const fs = require("fs")
 const path = require("path")
 const swaggerUi = require("swagger-ui-express")
 const swaggerJsdoc = require("swagger-jsdoc")
+const { Pool } = require("pg")
+
+// Configuração do banco de dados PostgreSQL
+const db = new Pool({
+    connectionString:
+        process.env.DB_URL ||
+        "postgresql://user:password@localhost:5432/vulnerable_app",
+    ssl: {
+        rejectUnauthorized: false,
+    },
+})
 
 const app = express()
 app.use(express.json())
@@ -79,6 +90,15 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec))
 const DB_PASSWORD = "SuperSecret123!"
 const API_KEY = "sk_live_51234567890abcdef"
 const JWT_SECRET = "my-secret-key"
+
+db.connect()
+    .then((client) => {
+        client.release()
+        console.log("Connected to PostgreSQL database")
+    })
+    .catch((err) => {
+        console.error("Error connecting to PostgreSQL database", err.stack)
+    })
 
 // VULNERABILIDADE 3: SQL Injection
 /**
