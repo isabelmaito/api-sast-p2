@@ -88,8 +88,8 @@ jobs:
         context: .
         push: true
         tags: |
-          ${{ secrets.DOCKER_USERNAME }}/projeto-p2-backend:latest
-          ${{ secrets.DOCKER_USERNAME }}/projeto-p2-backend:${{ steps.tag_version.outputs.new_tag }}
+          ${{ secrets.DOCKER_USERNAME }}/api-sast-p2:latest
+          ${{ secrets.DOCKER_USERNAME }}/api-sast-p2:${{ steps.tag_version.outputs.new_tag }}
 
   deploy:
     runs-on: ubuntu-latest
