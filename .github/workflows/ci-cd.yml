@@ -5,6 +5,9 @@ on:
     branches: [ main, develop ]
   pull_request:
     branches: [ main ]
+    
+permissions:
+  contents: write
 
 env:
   DOCKER_IMAGE_NAME: ${{ secrets.DOCKER_USERNAME }}/api-sast-p2
@@ -40,6 +43,22 @@ jobs:
           -Dsonar.sources=src
           -Dsonar.tests=tests
           -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
+
+    - name: Bump version and push tag
+      id: tag_version
+      uses: mathieudutour/github-tag-action@v6.1
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        default_bump: patch
+
+    - name: Create GitHub Release
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: ${{ steps.tag_version.outputs.new_tag }}
+        name: Release ${{ steps.tag_version.outputs.new_tag }}
+        body: ${{ steps.tag_version.outputs.changelog }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Calculate Docker image version
       id: version
