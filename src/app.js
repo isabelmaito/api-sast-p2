@@ -670,7 +670,7 @@ app.post("/verify-token", (req, res) => {
  *     tags: [Other]
  *     responses:
  *       200:
- *         description: Mensagem de boas-vindas
+ *         description: DEU CERTO, AMÉM! GLÓRIA A DEUS!
  */
 app.get("/", (req, res) => {
     res.json({
